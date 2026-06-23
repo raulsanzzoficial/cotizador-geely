@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotizador — Geely Financial Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#003087;--navy-dk:#001d5e;--yellow:#FFD100;--yellow-dk:#e6bc00;
+  --white:#fff;--g50:#f8fafc;--g100:#f1f5f9;--g200:#e2e8f0;
+  --g400:#94a3b8;--g600:#475569;--g800:#1e293b;
+  --green:#16a34a;--r:12px;--rs:8px;
+  --sh:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  --sh-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05)
+}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--g100);color:var(--g800);min-height:100vh}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,var(--navy-dk) 0%,var(--navy) 60%,#0047b3 100%);color:#fff;padding:28px 20px 0;text-align:center}
+.hdr-logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}
+.logo-box{width:48px;height:48px;background:var(--yellow);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:var(--navy-dk);flex-shrink:0}
+.hdr h1{font-size:clamp(18px,4vw,26px);font-weight:800;letter-spacing:-.5px}
+.hdr h1 span{color:var(--yellow)}
+.hdr-sub{font-size:13px;opacity:.75;margin-top:3px}
+.hdr-badge{display:inline-block;background:rgba(255,209,0,.15);border:1px solid rgba(255,209,0,.4);color:var(--yellow);font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;margin:12px 0 0}
+
+/* ── STEPS ── */
+.steps-wrap{background:var(--navy);padding:16px 20px 24px}
+.steps{display:flex;justify-content:center;align-items:flex-start;max-width:420px;margin:0 auto}
+.si{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative}
+.si:not(:last-child)::after{content:'';position:absolute;top:15px;left:calc(50% + 16px);right:calc(-50% + 16px);height:2px;background:rgba(255,255,255,.2)}
+.si.done:not(:last-child)::after,.si.active:not(:last-child)::after{background:rgba(255,209,0,.4)}
+.si-circle{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.12);color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;position:relative;z-index:1;transition:all .3s}
+.si.active .si-circle{background:var(--yellow);color:var(--navy-dk)}
+.si.done .si-circle{background:rgba(255,209,0,.25);color:var(--yellow)}
+.si-label{font-size:10px;color:rgba(255,255,255,.45);font-weight:500;text-align:center;white-space:nowrap}
+.si.active .si-label{color:var(--yellow)}
+.si.done .si-label{color:rgba(255,209,0,.6)}
+
+/* ── CONTAINER ── */
+.wrap{max-width:660px;margin:-16px auto 48px;padding:0 14px}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden;margin-bottom:14px}
+.card-hdr{padding:20px 22px 14px;border-bottom:1px solid var(--g100)}
+.card-hdr h2{font-size:17px;font-weight:700;color:var(--navy)}
+.card-hdr p{font-size:12px;color:var(--g600);margin-top:3px}
+.card-body{padding:22px}
+
+/* ── FORM ── */
+.fg{margin-bottom:18px}
+.fg:last-child{margin-bottom:0}
+label{display:block;font-size:11px;font-weight:700;color:var(--g600);margin-bottom:7px;text-transform:uppercase;letter-spacing:.6px}
+select,input[type=text],input[type=tel],input[type=email],input[type=number]{
+  width:100%;padding:12px 14px;border:2px solid var(--g200);border-radius:var(--rs);
+  font-family:inherit;font-size:15px;color:var(--g800);background:#fff;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;appearance:none
+}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:38px}
+select:focus,input:focus{border-color:var(--navy)}
+select:disabled{background-color:var(--g50);color:var(--g400);cursor:not-allowed}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ── PRICE BOX ── */
+.price-box{background:var(--g50);border:2px solid var(--g200);border-radius:var(--rs);padding:14px;text-align:center;margin-top:10px;display:none}
+.price-box.on{display:block}
+.price-box .pb-lbl{font-size:11px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.price-box .pb-amt{font-size:30px;font-weight:900;color:var(--navy);margin:3px 0}
+.price-box .pb-note{font-size:11px;color:var(--g400)}
+
+/* ── PROMO BOX ── */
+.promo-box{background:linear-gradient(135deg,#fff8e1,#fffde7);border:1px solid #ffe082;border-radius:var(--rs);padding:12px 14px;margin-top:10px;display:none}
+.promo-box.on{display:block}
+.promo-box .pb-title{font-size:10px;font-weight:800;color:#b8860b;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.promo-box p{font-size:12px;color:#5d4e00;line-height:1.55}
+
+/* ── BONO SELECTOR ── */
+.bono-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:var(--rs);padding:14px;margin-top:10px;display:none}
+.bono-box.on{display:block}
+.bono-ttl{font-size:10px;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.bono-amt{font-size:20px;font-weight:900;color:#166534;margin-bottom:10px}
+.bono-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bbo{border:2px solid #bbf7d0;border-radius:var(--rs);padding:10px 10px;cursor:pointer;background:#fff;font-family:inherit;text-align:center;transition:all .2s}
+.bbo:hover{border-color:#16a34a}
+.bbo.on{border-color:#16a34a;background:#f0fdf4}
+.bbo-icon{font-size:20px;margin-bottom:4px}
+.bbo-lbl{font-size:12px;font-weight:700;color:#166534}
+.bbo-sub{font-size:10px;color:#4ade80;margin-top:2px;color:#15803d;opacity:.8}
+
+/* ── PRICE BOX mejorado ── */
+.pb-lista{font-size:13px;color:var(--g600);font-weight:500;display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+.pb-descuento{font-size:13px;color:var(--green);font-weight:700;display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+.pb-final-lbl{font-size:11px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-top:1px dashed var(--g200);margin-top:8px;padding-top:8px}
+.pb-final-amt{font-size:32px;font-weight:900;color:var(--navy);margin:2px 0}
+
+/* ── INFO NOTE ── */
+.note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--rs);padding:9px 13px;font-size:12px;color:#1e40af;line-height:1.5;margin-top:8px}
+.note-green{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+
+/* ── ENGANCHE ── */
+.eng-wrap{position:relative}
+.eng-wrap input{padding-right:82px}
+.eng-tog{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;background:var(--g100);border-radius:6px;overflow:hidden;gap:1px}
+.etb{padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--g600);font-family:inherit;transition:all .15s}
+.etb.on{background:var(--navy);color:#fff;border-radius:5px}
+.eng-hint{font-size:11px;color:var(--g400);margin-top:5px}
+.eng-pct{font-size:12px;color:var(--navy);font-weight:700;margin-top:3px;min-height:16px}
+
+/* ── TERM GRID ── */
+.term-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tb{padding:11px 6px;border:2px solid var(--g200);border-radius:var(--rs);background:#fff;font-family:inherit;font-size:14px;font-weight:700;color:var(--g600);cursor:pointer;text-align:center;transition:all .2s;line-height:1}
+.tb small{display:block;font-size:10px;font-weight:400;opacity:.7;margin-top:3px}
+.tb:hover{border-color:var(--navy);color:var(--navy)}
+.tb.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.tb.on small{opacity:.8}
+
+/* ── PLAN OPTIONS ── */
+.plan-list{display:flex;flex-direction:column;gap:9px}
+.po{border:2px solid var(--g200);border-radius:var(--rs);padding:13px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:11px}
+.po:hover{border-color:var(--navy)}
+.po.on{border-color:var(--navy);background:#f0f4ff}
+.po input[type=radio]{width:17px;height:17px;margin-top:2px;flex-shrink:0;accent-color:var(--navy);cursor:pointer}
+.po-name{font-size:13px;font-weight:800;color:var(--navy)}
+.po-desc{font-size:11px;color:var(--g600);margin-top:2px;line-height:1.4}
+.po-rate{font-size:12px;font-weight:700;color:var(--green);margin-top:5px}
+
+/* ── PREVIEW BAR ── */
+.prev-bar{background:var(--navy-dk);color:#fff;padding:15px 22px;display:none;justify-content:space-between;align-items:center}
+.prev-bar.on{display:flex}
+.prev-lbl{font-size:11px;opacity:.6;margin-bottom:2px}
+.prev-amt{font-size:24px;font-weight:900;color:var(--yellow)}
+.prev-rate{font-size:15px;font-weight:700;color:var(--yellow)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s;width:100%}
+.btn-y{background:var(--yellow);color:var(--navy-dk)}
+.btn-y:hover:not(:disabled){background:var(--yellow-dk);transform:translateY(-1px)}
+.btn-y:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-g{background:var(--g100);color:var(--g600)}
+.btn-g:hover{background:var(--g200)}
+.btn-n{background:var(--navy);color:#fff}
+.btn-n:hover{background:var(--navy-dk)}
+.btn-row{display:flex;gap:10px;margin-top:22px}
+.btn-row .btn{flex:1}
+
+/* ── QUOTE ── */
+.q-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden}
+.q-hdr{background:linear-gradient(135deg,var(--navy-dk),var(--navy));color:#fff;padding:20px 22px}
+.q-hdr .q-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.6}
+.q-hdr .q-model{font-size:19px;font-weight:900;margin-top:4px;line-height:1.2}
+.q-hdr .q-date{font-size:11px;opacity:.5;margin-top:5px}
+.q-monthly{background:var(--yellow);padding:20px 22px;text-align:center}
+.q-m-lbl{font-size:11px;font-weight:700;color:rgba(0,0,0,.45);text-transform:uppercase;letter-spacing:.5px}
+.q-m-amt{font-size:44px;font-weight:900;color:var(--navy-dk);line-height:1.05}
+.q-m-sub{font-size:13px;color:var(--navy);font-weight:600;margin-top:3px}
+.q-row{display:flex;justify-content:space-between;align-items:center;padding:11px 22px;border-bottom:1px solid var(--g100)}
+.q-row:last-child{border-bottom:none}
+.q-row .rl{font-size:12px;color:var(--g600)}
+.q-row .rv{font-size:13px;font-weight:700;color:var(--g800);text-align:right}
+.rv.hi{color:var(--green)}
+.q-promo{background:linear-gradient(135deg,#fff8e1,#fffde7);border-top:2px solid #ffe082;padding:13px 22px;display:flex;align-items:flex-start;gap:10px}
+.q-promo-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.q-promo-ttl{font-size:10px;font-weight:800;color:#b8860b;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.q-promo p{font-size:12px;color:#5d4e00;line-height:1.5}
+.q-disc{padding:11px 22px;font-size:10px;color:var(--g400);text-align:center;border-top:1px solid var(--g100);line-height:1.7}
+
+/* ── CONTACT ── */
+.c-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden}
+.c-hdr{background:var(--g50);padding:15px 22px;border-bottom:1px solid var(--g200)}
+.c-hdr h3{font-size:15px;font-weight:800;color:var(--navy)}
+.c-hdr p{font-size:12px;color:var(--g600);margin-top:2px}
+.c-body{padding:22px}
+.opt{font-size:10px;font-weight:400;color:var(--g400);text-transform:none;letter-spacing:0;margin-left:4px}
+
+/* ── SUCCESS ── */
+.suc{background:#fff;border-radius:var(--r);box-shadow:var(--sh-lg);padding:44px 22px;text-align:center}
+.suc-icon{width:68px;height:68px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:30px}
+.suc h3{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:10px}
+.suc p{font-size:14px;color:var(--g600);line-height:1.7;max-width:300px;margin:0 auto}
+
+/* ── FOOTER ── */
+.ftr{text-align:center;padding:24px 20px;font-size:11px;color:var(--g400);line-height:1.7}
+
+/* ── UTILS ── */
+.hidden{display:none!important}
+.mt10{margin-top:10px}
+.mt14{margin-top:14px}
+
+/* ── PRINT ── */
+@media print{
+  .hdr,.steps-wrap,.c-card,.suc,.btn-row,.ftr,.prev-bar,#action-btns{display:none!important}
+  body{background:#fff}
+  .wrap{margin:0;padding:0;max-width:100%}
+  .q-card{box-shadow:none;border:1px solid #ccc}
+}
+
+@media(max-width:420px){
+  .btn-row{flex-direction:column}
+  .q-m-amt{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="logo-box">G</div>
+    <div>
+      <div style="font-size:10px;opacity:.65;letter-spacing:1.5px;font-weight:700">GEELY</div>
+      <div style="font-size:15px;font-weight:800;letter-spacing:-.2px">Financial Services</div>
+    </div>
+  </div>
+  <h1>Cotizador de <span>Autofinanciamiento</span></h1>
+  <div class="hdr-sub">Simula tu crédito en minutos · Sin compromiso</div>
+  <div class="hdr-badge">📅 Oferta vigente: 1 — 30 de Junio 2026</div>
+  <div style="height:20px"></div>
+</header>
+
+<!-- STEP INDICATOR -->
+<div class="steps-wrap">
+  <div class="steps">
+    <div class="si active" id="si1">
+      <div class="si-circle">1</div>
+      <div class="si-label">Tu Auto</div>
+    </div>
+    <div class="si" id="si2">
+      <div class="si-circle">2</div>
+      <div class="si-label">Financiamiento</div>
+    </div>
+    <div class="si" id="si3">
+      <div class="si-circle">3</div>
+      <div class="si-label">Tu Cotización</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ════════ STEP 1 ════════ -->
+<div id="s1" class="card">
+  <div class="card-hdr">
+    <h2>¿Qué auto te interesa?</h2>
+    <p>Selecciona el modelo y versión que deseas cotizar</p>
+  </div>
+  <div class="card-body">
+
+    <div class="fg">
+      <label>Modelo</label>
+      <select id="sel-model">
+        <option value="">— Selecciona un modelo —</option>
+        <optgroup label="Sedán">
+          <option value="Emgrand 2026">Emgrand 2026</option>
+        </optgroup>
+        <optgroup label="SUV Compacta">
+          <option value="GX3 Pro 2025">GX3 Pro 2025</option>
+          <option value="GX3 Pro 2026">GX3 Pro 2026</option>
+          <option value="Coolray Lite 2026">Coolray Lite 2026</option>
+          <option value="Nueva Coolray 2026">Nueva Coolray 2026</option>
+        </optgroup>
+        <optgroup label="SUV Mediana">
+          <option value="Cityray 2025">Cityray 2025</option>
+          <option value="Cityray 2026">Cityray 2026</option>
+          <option value="Starray 2025">Starray 2025</option>
+          <option value="Starray 2026">Starray 2026</option>
+        </optgroup>
+        <optgroup label="SUV Grande">
+          <option value="Monjaro 2026">Monjaro 2026</option>
+          <option value="Okavango 2024">Okavango 2024</option>
+          <option value="Okavango 2025">Okavango 2025</option>
+          <option value="Okavango 2026">Okavango 2026</option>
+        </optgroup>
+        <optgroup label="⚡ Eléctrico / Híbrido">
+          <option value="Geely EX2 2026">Geely EX2 2026 ⚡</option>
+          <option value="Geely EX5 EM-i 2026">Geely EX5 EM-i 2026 ⚡</option>
+          <option value="Geely EX5 2026">Geely EX5 2026 ⚡</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="fg hidden" id="ver-grp">
+      <label>Versión</label>
+      <select id="sel-ver" disabled>
+        <option value="">— Selecciona versión —</option>
+      </select>
+    </div>
+
+    <div class="price-box" id="price-box">
+      <div id="pb-detalle">
+        <!-- Cuando hay bono disponible se llena dinámicamente -->
+      </div>
+      <div id="pb-solo">
+        <div class="pb-lbl">Precio de Lista · Junio 2026</div>
+        <div class="pb-amt" id="pb-amt">—</div>
+      </div>
+      <div class="pb-note" id="pb-note"></div>
+    </div>
+
+    <!-- BONO SELECTOR (aparece solo si el modelo/versión tiene bono disponible) -->
+    <div class="bono-box" id="bono-box">
+      <div class="bono-ttl">💰 Bono disponible este mes</div>
+      <div class="bono-amt" id="bono-amt-disp">—</div>
+      <div style="font-size:11px;color:#166534;margin-bottom:10px;">¿Cómo deseas usar tu bono?</div>
+      <div class="bono-opts">
+        <button class="bbo" id="bbo-precio" onclick="setBonoDest('precio')">
+          <div class="bbo-icon">🏷️</div>
+          <div class="bbo-lbl">Aplicar al precio</div>
+          <div class="bbo-sub">Precio de venta reducido</div>
+        </button>
+        <button class="bbo" id="bbo-otro" onclick="setBonoDest('otro')">
+          <div class="bbo-icon">📊</div>
+          <div class="bbo-lbl">Aplicar a tasa / enganche</div>
+          <div class="bbo-sub">Un asesor te explica</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="promo-box" id="promo-box">
+      <div class="pb-title">⭐ Promoción del mes</div>
+      <p id="promo-txt"></p>
+    </div>
+
+    <div class="note note-green hidden mt10" id="sg-note">
+      🛡️ <strong>Seguro Gratis disponible</strong> para este modelo · Cobertura amplia · 12 meses
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-y" id="btn1" onclick="goStep2()" disabled>Continuar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ STEP 2 ════════ -->
+<div id="s2" class="card hidden">
+  <div class="card-hdr">
+    <h2>Personaliza tu financiamiento</h2>
+    <p>Elige tu enganche, plazo y plan para ver tu pago mensual</p>
+  </div>
+  <div class="card-body">
+
+    <div class="fg">
+      <label>Enganche</label>
+      <div class="eng-wrap">
+        <input type="number" id="inp-eng" placeholder="Ej. 100,000" min="0" oninput="onEnganche()">
+        <div class="eng-tog">
+          <button class="etb on" id="etb-mxn" onclick="setEngMode('mxn')">$</button>
+          <button class="etb" id="etb-pct" onclick="setEngMode('pct')">%</button>
+        </div>
+      </div>
+      <div class="eng-hint">Mínimo recomendado 20% · Con 50%+ obtienes la mejor tasa</div>
+      <div class="eng-pct" id="eng-pct"></div>
+    </div>
+
+    <div class="fg">
+      <label>Plazo</label>
+      <div class="term-grid">
+        <button class="tb" data-m="12" onclick="pickTerm(12)">12<small>meses</small></button>
+        <button class="tb" data-m="24" onclick="pickTerm(24)">24<small>meses</small></button>
+        <button class="tb" data-m="36" onclick="pickTerm(36)">36<small>meses</small></button>
+        <button class="tb" data-m="48" onclick="pickTerm(48)">48<small>meses</small></button>
+        <button class="tb" data-m="60" onclick="pickTerm(60)">60<small>meses</small></button>
+        <button class="tb" data-m="72" onclick="pickTerm(72)">72<small>meses</small></button>
+      </div>
+      <div class="note mt10">Los 72 meses están disponibles desde el 20% de enganche.</div>
+    </div>
+
+    <div class="fg">
+      <label>Plan de financiamiento</label>
+      <div class="plan-list" id="plan-list"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-g" onclick="goStep1()">← Regresar</button>
+      <button class="btn btn-y" id="btn2" onclick="goStep3()" disabled>Ver mi cotización →</button>
+    </div>
+  </div>
+
+  <div class="prev-bar" id="prev-bar">
+    <div>
+      <div class="prev-lbl">Pago mensual estimado</div>
+      <div class="prev-amt" id="prev-amt">—</div>
+    </div>
+    <div style="text-align:right">
+      <div class="prev-lbl">Tasa anual</div>
+      <div class="prev-rate" id="prev-rate">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ STEP 3 ════════ -->
+<div id="s3" class="hidden">
+
+  <div class="q-card" id="q-out">
+    <div class="q-hdr">
+      <div class="q-lbl">Cotización · Geely Financial Services</div>
+      <div class="q-model" id="q-model"></div>
+      <div class="q-date" id="q-date"></div>
+    </div>
+    <div class="q-monthly">
+      <div class="q-m-lbl">Pago mensual estimado</div>
+      <div class="q-m-amt" id="q-pay"></div>
+      <div class="q-m-sub" id="q-sub"></div>
+    </div>
+    <div id="q-rows">
+      <div class="q-row"><span class="rl">Precio de lista</span><span class="rv" id="qr-lista"></span></div>
+      <div class="q-row hidden" id="qr-bono-row"><span class="rl">Bono aplicado al precio</span><span class="rv hi" id="qr-bono"></span></div>
+      <div class="q-row"><span class="rl">Precio de venta</span><span class="rv" id="qr-price"></span></div>
+      <div class="q-row"><span class="rl">Enganche</span><span class="rv" id="qr-eng"></span></div>
+      <div class="q-row"><span class="rl">Monto a financiar</span><span class="rv" id="qr-monto"></span></div>
+      <div class="q-row"><span class="rl">Comisión por apertura</span><span class="rv" id="qr-cxa"></span></div>
+      <div class="q-row"><span class="rl">Total del crédito</span><span class="rv" id="qr-total"></span></div>
+      <div class="q-row"><span class="rl">Plazo</span><span class="rv" id="qr-plazo"></span></div>
+      <div class="q-row"><span class="rl">Tasa anual</span><span class="rv" id="qr-tasa"></span></div>
+      <div class="q-row"><span class="rl">Plan</span><span class="rv" id="qr-plan"></span></div>
+    </div>
+    <div class="q-promo" id="q-promo">
+      <div class="q-promo-icon">⭐</div>
+      <div><div class="q-promo-ttl">Promoción del mes</div><p id="q-promo-p"></p></div>
+    </div>
+    <div class="q-disc">
+      Simulación con fines ilustrativos. El pago puede variar según análisis de crédito y condiciones al momento de la firma.<br>
+      Vigencia: 1 al 30 de junio 2026 · Financiamiento sujeto a aprobación de Geely Financial Services / BBVA.
+    </div>
+  </div>
+
+  <div class="c-card mt14" id="c-frm">
+    <div class="c-hdr">
+      <h3>Recibe seguimiento personalizado</h3>
+      <p>Un asesor Geely te contactará para confirmar tu cotización</p>
+    </div>
+    <div class="c-body">
+      <div class="fg">
+        <label>Nombre completo</label>
+        <input type="text" id="inp-nom" placeholder="Tu nombre y apellidos" oninput="chkContact()">
+      </div>
+      <div class="fg">
+        <label>Teléfono / WhatsApp</label>
+        <input type="tel" id="inp-tel" placeholder="10 dígitos" maxlength="15" oninput="chkContact()">
+      </div>
+      <div class="fg">
+        <label>Correo electrónico <span class="opt">(opcional)</span></label>
+        <input type="email" id="inp-email" placeholder="tu@correo.com">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-g" onclick="goStep2Back()">← Regresar</button>
+        <button class="btn btn-y" id="btn-env" onclick="enviar()" disabled>Enviar cotización ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="action-btns" class="btn-row mt14">
+    <button class="btn btn-g" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn btn-n" onclick="resetAll()">+ Nueva simulación</button>
+  </div>
+</div>
+
+<!-- ════════ SUCCESS ════════ -->
+<div id="s-ok" class="suc hidden">
+  <div class="suc-icon">✅</div>
+  <h3>¡Cotización enviada!</h3>
+  <p>Gracias, <strong id="ok-nom"></strong>. Un asesor de Geely te contactará al número <strong id="ok-tel"></strong> a la brevedad.</p>
+  <div style="margin-top:28px">
+    <button class="btn btn-y" onclick="resetAll()" style="max-width:260px;margin:0 auto">+ Nueva simulación</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer class="ftr">
+  Geely Financial Services (BBVA) · Oferta Comercial Junio 2026 · Boletín BGFS-0906-2026<br>
+  Información sujeta a cambio sin previo aviso · Aplica condiciones de crédito
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CATÁLOGO
+// ══════════════════════════════════════════════════════════
+// v: { version: { l: precioLista, b: bonoDisponible } }
+// b > 0 significa que el cliente puede elegir aplicar ese bono al precio (o a tasa/enganche)
+const CAT = {
+  "Emgrand 2026":       {yr:2026, v:{"GC":{l:299990,b:35000},"GL":{l:347990,b:50000},"GF":{l:373990,b:60000}},        pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono disponible aplicable a precio, tasa o enganche. Seguro Gratis disponible (sujeto a condiciones)."},
+  "GX3 Pro 2025":       {yr:2025, v:{"GC":{l:329990,b:35000},"GF":{l:359990,b:35000}},                                pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono disponible aplicable a precio, tasa o enganche. Seguro Gratis disponible (sujeto a condiciones)."},
+  "GX3 Pro 2026":       {yr:2026, v:{"GC":{l:329990,b:35000},"GF":{l:359990,b:35000}},                                pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono disponible aplicable a precio, tasa o enganche. Seguro Gratis disponible (sujeto a condiciones)."},
+  "Coolray Lite 2026":  {yr:2026, v:{"GS MT":{l:339990,b:10000},"GS CVT":{l:359990,b:0}},                             pl:["BASE","CAMP","LAN"],       sg:false, el:false, promo:"0% Comisión por Apertura con plan LAN. GS MT: bono adicional disponible."},
+  "Nueva Coolray 2026": {yr:2026, v:{"GC Plus":{l:399990,b:0},"GL Plus":{l:419990,b:0},"GF Plus":{l:469990,b:0}},    pl:["BASE","CAMP"],             sg:false, el:false, promo:"0% Comisión por Apertura con plan CAMP. Tasa desde 10.99%."},
+  "Cityray 2025":       {yr:2025, v:{"GL":{l:488990,b:0},"GF":{l:518990,b:0},"GF Bitono":{l:528990,b:0}},            pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
+  "Cityray 2026":       {yr:2026, v:{"GL":{l:488990,b:0},"GF":{l:518990,b:0},"GF Bitono":{l:528990,b:0}},            pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
+  "Starray 2025":       {yr:2025, v:{"GL 1.5":{l:559990,b:70000},"GL 2.0":{l:599990,b:70000},"GF 2.0":{l:655990,b:70000}}, pl:["BASE","CAMP","PROMO_S25"], sg:true, el:false, promo:"Bono de $70,000 aplicable a precio, tasa o enganche (requiere GFS/BBVA). Seguro Gratis disponible."},
+  "Starray 2026":       {yr:2026, v:{"GL 2.0":{l:599990,b:0},"GF 2.0":{l:655990,b:0}},                               pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99%. 0% Comisión por Apertura con plan CAMP."},
+  "Geely EX2 2026":     {yr:2026, v:{"GL":{l:389900,b:0},"GF":{l:419900,b:0}},                                        pl:["BASE","CAMP","LAN","SOST"],sg:false, el:true,  promo:"Tasa desde 10.49% + 0% Comisión por Apertura con plan LAN. ⚡ Incluye Wallbox."},
+  "Geely EX5 EM-i 2026":{yr:2026, v:{"GL":{l:569990,b:40000},"GF":{l:599990,b:0}},                                   pl:["BASE","CAMP","SOST"],      sg:true,  el:true,  promo:"Versión GL: bono de $40,000 aplicable a precio, tasa o enganche. Tasa desde 10.49%. Seguro Gratis disponible. ⚡ Incluye Wallbox."},
+  "Geely EX5 2026":     {yr:2026, v:{"GF":{l:699990,b:0}},                                                            pl:["BASE","CAMP","SOST","PROMO_EX5"], sg:true, el:true, promo:"Tasa desde 6.00% (subsidio completo a tasa) o 7.71% + Seguro Gratis. 0% Comisión por Apertura. ⚡ Incluye Wallbox."},
+  "Monjaro 2026":       {yr:2026, v:{"GF":{l:699990,b:0}},                                                            pl:["BASE","CAMP","PROMO_MON"], sg:true,  el:false, promo:"Tasa desde 6.00% (subsidio completo a tasa) o 7.57% + Seguro Gratis. 0% Comisión por Apertura."},
+  "Okavango 2024":      {yr:2024, v:{"GL":{l:669888,b:0},"GF":{l:729888,b:0}},                                        pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
+  "Okavango 2025":      {yr:2025, v:{"GL":{l:669888,b:0},"GF":{l:729888,b:0}},                                        pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
+  "Okavango 2026":      {yr:2026, v:{"GF Suite":{l:729888,b:0}},                                                       pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."}
+};
+
+// ══════════════════════════════════════════════════════════
+// PLANES
+// ══════════════════════════════════════════════════════════
+const PLANS = {
+  BASE:      {name:"Plan BASE",      desc:"Tasa ajustada según tu % de enganche",                        cxa:(yr)=>yr===2024?0.02:0.025, rate:(p)=>p>=50?10.99:p>=30?12.99:15.99},
+  CAMP:      {name:"Plan CAMP",      desc:"0% Comisión por Apertura — sin costo inicial adicional",      cxa:()=>0,                      rate:()=>15.99},
+  LAN:       {name:"Plan LAN",       desc:"Tasa preferencial + 0% Comisión por Apertura",               cxa:()=>0,                      rate:(p)=>p>=50?10.49:p>=30?12.49:15.49},
+  SOST:      {name:"Plan SOSTENIBLE",desc:"Tasa preferencial para vehículos electrificados",            cxa:()=>0.025,                  rate:(p)=>p>=50?10.49:p>=30?12.49:14.99},
+  PROMO_EX5: {name:"Tasa Promo GFS", desc:"Tasa subsidiada 6.00% exclusiva con financiamiento GFS/BBVA. 0% CxA.", cxa:()=>0,          rate:()=>6.00},
+  PROMO_MON: {name:"Tasa Promo GFS", desc:"Tasa subsidiada 6.00% exclusiva con financiamiento GFS/BBVA. 0% CxA.", cxa:()=>0,          rate:()=>6.00},
+  PROMO_S25: {name:"Tasa Promo GFS", desc:"Tasa 8.99% con bono aplicado — exclusiva GFS/BBVA",          cxa:(yr)=>0.025,               rate:()=>8.99}
+};
+
+// ══════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════
+// price = precio final usado para el cálculo (lista - bono si se aplica al precio)
+// lista = precio de lista siempre
+// bono  = monto del bono disponible (0 si no hay)
+// bonoDest = 'precio' | 'otro' | null (null = no elegido aún)
+let S = { model:null, ver:null, lista:0, bono:0, bonoDest:null, price:0, eng:0, engPct:0, term:0, plan:null, engMode:'mxn' };
+
+// ══════════════════════════════════════════════════════════
+// UTILIDADES
+// ══════════════════════════════════════════════════════════
+const fmt = n => '$' + Math.round(n).toLocaleString('es-MX');
+const fmtPct = p => p.toFixed(1) + '%';
+
+function pmt(principal, annualRate, months) {
+  if (!months || principal <= 0) return 0;
+  const r = annualRate / 100 / 12;
+  if (r === 0) return principal / months;
+  return principal * (r * Math.pow(1+r, months)) / (Math.pow(1+r, months) - 1);
+}
+
+function curRate() {
+  if (!S.plan) return null;
+  return PLANS[S.plan].rate(S.engPct);
+}
+
+function curCxa() {
+  if (!S.plan || !S.model) return 0;
+  return PLANS[S.plan].cxa(CAT[S.model].yr);
+}
+
+function liveCalc() {
+  const rate = curRate();
+  const cxa  = curCxa();
+  const monto = S.price - S.eng;
+  const btn2  = document.getElementById('btn2');
+  const bar   = document.getElementById('prev-bar');
+
+  if (!rate || !S.eng || !S.term || monto <= 0) {
+    bar.classList.remove('on');
+    btn2.disabled = true;
+    return;
+  }
+  const total   = monto * (1 + cxa);
+  const monthly = pmt(total, rate, S.term);
+  document.getElementById('prev-amt').textContent  = fmt(monthly) + '/mes';
+  document.getElementById('prev-rate').textContent = fmtPct(rate);
+  bar.classList.add('on');
+  btn2.disabled = false;
+}
+
+// ══════════════════════════════════════════════════════════
+// STEP 1 — MODELO
+// ══════════════════════════════════════════════════════════
+document.getElementById('sel-model').addEventListener('change', function() {
+  const m = this.value;
+  S.model = m || null;
+  S.ver = null; S.lista = 0; S.bono = 0; S.bonoDest = null; S.price = 0;
+
+  const vg  = document.getElementById('ver-grp');
+  const vs  = document.getElementById('sel-ver');
+  const pb  = document.getElementById('price-box');
+  const pmb = document.getElementById('promo-box');
+  const sgn = document.getElementById('sg-note');
+  const bb  = document.getElementById('bono-box');
+
+  pb.classList.remove('on');
+  pmb.classList.remove('on');
+  bb.classList.remove('on');
+  sgn.classList.add('hidden');
+  document.getElementById('btn1').disabled = true;
+
+  if (!m) { vg.classList.add('hidden'); return; }
+
+  const d = CAT[m];
+  vs.innerHTML = '<option value="">— Selecciona versión —</option>';
+  Object.keys(d.v).forEach(k => {
+    const o = document.createElement('option');
+    o.value = k;
+    o.textContent = k + '  —  ' + fmt(d.v[k].l);
+    vs.appendChild(o);
+  });
+  vs.disabled = false;
+  vg.classList.remove('hidden');
+
+  document.getElementById('promo-txt').textContent = d.promo;
+  pmb.classList.add('on');
+});
+
+document.getElementById('sel-ver').addEventListener('change', function() {
+  const ver = this.value;
+  const pb  = document.getElementById('price-box');
+  const bb  = document.getElementById('bono-box');
+
+  if (!ver) {
+    pb.classList.remove('on');
+    bb.classList.remove('on');
+    document.getElementById('btn1').disabled = true;
+    return;
+  }
+
+  const d    = CAT[S.model];
+  const vdat = d.v[ver];
+  S.ver      = ver;
+  S.lista    = vdat.l;
+  S.bono     = vdat.b;
+  S.bonoDest = null;
+  S.price    = vdat.l; // parte desde precio de lista
+
+  renderPriceBox(d);
+  document.getElementById('sg-note').classList.toggle('hidden', !d.sg);
+  // Si hay bono, mostrar selector; si no, habilitar continuar directamente
+  if (S.bono > 0) {
+    bb.classList.add('on');
+    document.getElementById('bono-amt-disp').textContent = fmt(S.bono);
+    document.getElementById('bbo-precio').classList.remove('on');
+    document.getElementById('bbo-otro').classList.remove('on');
+    document.getElementById('btn1').disabled = true; // esperar decisión del bono
+  } else {
+    bb.classList.remove('on');
+    document.getElementById('btn1').disabled = false;
+  }
+});
+
+function setBonoDest(dest) {
+  S.bonoDest = dest;
+  S.price = dest === 'precio' ? S.lista - S.bono : S.lista;
+  document.getElementById('bbo-precio').classList.toggle('on', dest === 'precio');
+  document.getElementById('bbo-otro').classList.toggle('on', dest === 'otro');
+  renderPriceBox(CAT[S.model]);
+  document.getElementById('btn1').disabled = false;
+}
+
+function renderPriceBox(d) {
+  const pb   = document.getElementById('price-box');
+  const solo = document.getElementById('pb-solo');
+  const det  = document.getElementById('pb-detalle');
+
+  pb.classList.add('on');
+
+  const note = d.el ? '⚡ Incluye Wallbox (no incluye instalación)' : '';
+  document.getElementById('pb-note').textContent = note;
+
+  if (S.bono > 0 && S.bonoDest) {
+    // Vista detallada: lista + descuento + final
+    solo.style.display = 'none';
+    const desc = S.bonoDest === 'precio'
+      ? `<div class="pb-lista"><span>Precio de lista</span><span>${fmt(S.lista)}</span></div>
+         <div class="pb-descuento"><span>− Bono aplicado al precio</span><span>− ${fmt(S.bono)}</span></div>
+         <div class="pb-final-lbl">Precio de venta</div>
+         <div class="pb-final-amt">${fmt(S.price)}</div>`
+      : `<div class="pb-lista"><span>Precio de lista</span><span>${fmt(S.lista)}</span></div>
+         <div class="pb-descuento"><span>Bono ${fmt(S.bono)} → para tasa/enganche</span><span>✓</span></div>
+         <div class="pb-final-lbl">Precio de venta</div>
+         <div class="pb-final-amt">${fmt(S.price)}</div>`;
+    det.innerHTML = desc;
+  } else {
+    // Vista simple: solo precio de lista
+    solo.style.display = 'block';
+    det.innerHTML = '';
+    document.getElementById('pb-amt').textContent = fmt(S.lista);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// STEP 2 — FINANCIAMIENTO
+// ══════════════════════════════════════════════════════════
+let engMode = 'mxn';
+
+function setEngMode(m) {
+  engMode = m;
+  document.getElementById('etb-mxn').classList.toggle('on', m==='mxn');
+  document.getElementById('etb-pct').classList.toggle('on', m==='pct');
+  document.getElementById('inp-eng').value = '';
+  document.getElementById('eng-pct').textContent = '';
+  document.getElementById('inp-eng').placeholder = m==='mxn' ? 'Ej. 100,000' : 'Ej. 30';
+  S.eng = 0; S.engPct = 0;
+  liveCalc();
+}
+
+function onEnganche() {
+  const val = parseFloat(document.getElementById('inp-eng').value) || 0;
+  const disp = document.getElementById('eng-pct');
+  if (engMode === 'mxn') {
+    S.eng    = val;
+    S.engPct = S.price > 0 ? (val / S.price) * 100 : 0;
+    disp.textContent = val > 0 && S.price > 0 ? '= ' + fmtPct(S.engPct) + ' del precio del vehículo' : '';
+  } else {
+    S.engPct = val;
+    S.eng    = (val / 100) * S.price;
+    disp.textContent = val > 0 ? '= ' + fmt(S.eng) : '';
+  }
+  if (S.plan) buildPlans();
+  liveCalc();
+}
+
+function pickTerm(m) {
+  S.term = m;
+  document.querySelectorAll('.tb').forEach(b => b.classList.toggle('on', +b.dataset.m === m));
+  liveCalc();
+}
+
+function buildPlans() {
+  const d   = CAT[S.model];
+  const lst = document.getElementById('plan-list');
+  lst.innerHTML = '';
+  const pct = S.engPct || 20;
+  d.pl.forEach(pk => {
+    const p    = PLANS[pk];
+    const rate = p.rate(pct);
+    const cxaP = p.cxa(d.yr) * 100;
+    const el   = document.createElement('div');
+    el.className = 'po' + (S.plan === pk ? ' on' : '');
+    el.innerHTML = `
+      <input type="radio" name="pl" value="${pk}" ${S.plan===pk?'checked':''}>
+      <div>
+        <div class="po-name">${p.name}</div>
+        <div class="po-desc">${p.desc}</div>
+        <div class="po-rate">Tasa: ${rate.toFixed(2)}% anual &nbsp;·&nbsp; CxA: ${cxaP===0?'<span style="color:var(--green)">¡0% Sin comisión!</span>':cxaP.toFixed(1)+'%'}</div>
+      </div>`;
+    el.addEventListener('click', () => pickPlan(pk));
+    lst.appendChild(el);
+  });
+}
+
+function pickPlan(pk) {
+  S.plan = pk;
+  document.querySelectorAll('.po').forEach(el => {
+    const r = el.querySelector('input');
+    const match = r && r.value === pk;
+    el.classList.toggle('on', match);
+    if (r) r.checked = match;
+  });
+  liveCalc();
+}
+
+// ══════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════════════════════════
+function setStep(n) {
+  document.getElementById('s1').classList.toggle('hidden', n!==1);
+  document.getElementById('s2').classList.toggle('hidden', n!==2);
+  document.getElementById('s3').classList.toggle('hidden', n!==3);
+  document.getElementById('s-ok').classList.add('hidden');
+  for (let i=1;i<=3;i++) {
+    const el = document.getElementById('si'+i);
+    el.classList.toggle('active', i===n);
+    el.classList.toggle('done', i<n);
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goStep1() { setStep(1); }
+
+function goStep2() {
+  if (!S.model || !S.ver) return;
+  buildPlans();
+  setStep(2);
+}
+
+function goStep2Back() { setStep(2); document.getElementById('c-frm').classList.remove('hidden'); }
+
+function goStep3() {
+  if (!S.eng || !S.term || !S.plan) return;
+  buildQuote();
+  setStep(3);
+}
+
+// ══════════════════════════════════════════════════════════
+// COTIZACIÓN
+// ══════════════════════════════════════════════════════════
+function buildQuote() {
+  const d     = CAT[S.model];
+  const p     = PLANS[S.plan];
+  const rate  = p.rate(S.engPct);
+  const cxaP  = p.cxa(d.yr);
+  const monto = S.price - S.eng;
+  const cxaM  = monto * cxaP;
+  const total = monto + cxaM;
+  const pay   = pmt(total, rate, S.term);
+  const today = new Date().toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'});
+
+  document.getElementById('q-model').textContent = S.model + ' · ' + S.ver;
+  document.getElementById('q-date').textContent  = 'Generada el ' + today;
+  document.getElementById('q-pay').textContent   = fmt(pay);
+  document.getElementById('q-sub').textContent   = S.term + ' meses · Tasa ' + rate.toFixed(2) + '% anual';
+
+  // Precio de lista siempre visible
+  document.getElementById('qr-lista').textContent = fmt(S.lista);
+
+  // Fila de bono: solo si hay bono y se aplicó al precio
+  const bonoRow = document.getElementById('qr-bono-row');
+  const bonoEl  = document.getElementById('qr-bono');
+  if (S.bono > 0 && S.bonoDest === 'precio') {
+    bonoRow.classList.remove('hidden');
+    bonoEl.textContent = '− ' + fmt(S.bono);
+  } else if (S.bono > 0 && S.bonoDest === 'otro') {
+    bonoRow.classList.remove('hidden');
+    bonoEl.textContent = fmt(S.bono) + ' → tasa/enganche';
+    bonoEl.className = 'rv';
+  } else {
+    bonoRow.classList.add('hidden');
+  }
+
+  document.getElementById('qr-price').textContent = fmt(S.price);
+  document.getElementById('qr-eng').textContent   = fmt(S.eng) + ' (' + fmtPct(S.engPct) + ')';
+  document.getElementById('qr-monto').textContent = fmt(monto);
+
+  const cxaEl = document.getElementById('qr-cxa');
+  if (cxaP === 0) { cxaEl.textContent = '¡0% Sin comisión!'; cxaEl.className = 'rv hi'; }
+  else            { cxaEl.textContent = fmt(cxaM) + ' (' + (cxaP*100).toFixed(1) + '%)'; cxaEl.className = 'rv'; }
+
+  document.getElementById('qr-total').textContent = fmt(total);
+  document.getElementById('qr-plazo').textContent = S.term + ' meses';
+  document.getElementById('qr-tasa').textContent  = rate.toFixed(2) + '% anual';
+  document.getElementById('qr-plan').textContent  = p.name;
+
+  const qp = document.getElementById('q-promo');
+  if (d.promo) { document.getElementById('q-promo-p').textContent = d.promo; qp.style.display='flex'; }
+  else         { qp.style.display='none'; }
+}
+
+// ══════════════════════════════════════════════════════════
+// CONTACTO
+// ══════════════════════════════════════════════════════════
+function chkContact() {
+  const nom = document.getElementById('inp-nom').value.trim();
+  const tel = document.getElementById('inp-tel').value.trim();
+  document.getElementById('btn-env').disabled = !(nom.length >= 2 && tel.replace(/\D/g,'').length >= 10);
+}
+
+function enviar() {
+  const nom = document.getElementById('inp-nom').value.trim();
+  const tel = document.getElementById('inp-tel').value.trim();
+  document.getElementById('c-frm').classList.add('hidden');
+  document.getElementById('action-btns').classList.add('hidden');
+  document.getElementById('s-ok').classList.remove('hidden');
+  document.getElementById('ok-nom').textContent = nom;
+  document.getElementById('ok-tel').textContent = tel;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════════════════
+function resetAll() {
+  S = {model:null,ver:null,lista:0,bono:0,bonoDest:null,price:0,eng:0,engPct:0,term:0,plan:null,engMode:'mxn'};
+  engMode = 'mxn';
+
+  document.getElementById('sel-model').value = '';
+  const vs = document.getElementById('sel-ver');
+  vs.innerHTML = '<option value="">— Selecciona versión —</option>';
+  vs.disabled = true;
+  document.getElementById('ver-grp').classList.add('hidden');
+  document.getElementById('price-box').classList.remove('on');
+  document.getElementById('promo-box').classList.remove('on');
+  document.getElementById('bono-box').classList.remove('on');
+  document.getElementById('pb-detalle').innerHTML = '';
+  document.getElementById('pb-solo').style.display = 'block';
+  document.getElementById('sg-note').classList.add('hidden');
+  document.getElementById('btn1').disabled = true;
+
+  document.getElementById('inp-eng').value = '';
+  document.getElementById('eng-pct').textContent = '';
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.getElementById('plan-list').innerHTML = '';
+  document.getElementById('prev-bar').classList.remove('on');
+  document.getElementById('etb-mxn').classList.add('on');
+  document.getElementById('etb-pct').classList.remove('on');
+  document.getElementById('inp-eng').placeholder = 'Ej. 100,000';
+
+  document.getElementById('inp-nom').value = '';
+  document.getElementById('inp-tel').value = '';
+  document.getElementById('inp-email').value = '';
+  document.getElementById('btn-env').disabled = true;
+  document.getElementById('c-frm').classList.remove('hidden');
+  document.getElementById('action-btns').classList.remove('hidden');
+
+  setStep(1);
+}
+</script>
+</body>
+</html>
