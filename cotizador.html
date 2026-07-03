@@ -215,7 +215,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
   <h1>Cotizador de <span>Autofinanciamiento</span></h1>
   <div class="hdr-sub">Simula tu crédito en minutos · Sin compromiso</div>
-  <div class="hdr-badge">📅 Oferta vigente: 1 — 30 de Junio 2026</div>
+  <div class="hdr-badge">📅 Oferta vigente: 1 — 30 de Julio 2026</div>
   <div style="height:20px"></div>
 </header>
 
@@ -292,7 +292,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <!-- Cuando hay bono disponible se llena dinámicamente -->
       </div>
       <div id="pb-solo">
-        <div class="pb-lbl">Precio de Lista · Junio 2026</div>
+        <div class="pb-lbl">Precio de Lista · Julio 2026</div>
         <div class="pb-amt" id="pb-amt">—</div>
       </div>
       <div class="pb-note" id="pb-note"></div>
@@ -412,8 +412,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="q-row"><span class="rl">Comisión por apertura</span><span class="rv" id="qr-cxa"></span></div>
       <div class="q-row"><span class="rl">Total del crédito</span><span class="rv" id="qr-total"></span></div>
       <div class="q-row"><span class="rl">Plazo</span><span class="rv" id="qr-plazo"></span></div>
-      <div class="q-row"><span class="rl">Tasa anual</span><span class="rv" id="qr-tasa"></span></div>
+      <div class="q-row"><span class="rl">Tasa fija anual</span><span class="rv" id="qr-tasa"></span></div>
       <div class="q-row"><span class="rl">Plan</span><span class="rv" id="qr-plan"></span></div>
+      <div class="q-row" style="border-top:2px dashed var(--g200);margin-top:4px;padding-top:8px"><span class="rl" style="font-weight:700;color:var(--navy)">CAT</span><span class="rv" style="font-weight:800;color:var(--navy)" id="qr-cat"></span></div>
     </div>
     <div class="q-promo" id="q-promo">
       <div class="q-promo-icon">⭐</div>
@@ -421,7 +422,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     </div>
     <div class="q-disc">
       Simulación con fines ilustrativos. El pago puede variar según análisis de crédito y condiciones al momento de la firma.<br>
-      Vigencia: 1 al 30 de junio 2026 · Financiamiento sujeto a aprobación de Geely Financial Services / BBVA.
+      CAT promedio informativo sin IVA, calculado con inflación estimada del 3% anual (metodología BANXICO). Para fines de comparación exclusivamente.<br>
+      Vigencia: 1 al 30 de julio 2026 · Boletín BGFS-0107-2026 V1 · Financiamiento sujeto a aprobación de Geely Financial Services / BBVA.
     </div>
   </div>
 
@@ -469,7 +471,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 </div><!-- /wrap -->
 
 <footer class="ftr">
-  Geely Financial Services (BBVA) · Oferta Comercial Junio 2026 · Boletín BGFS-0906-2026<br>
+  Geely Financial Services (BBVA) · Oferta Comercial Julio 2026 · Boletín BGFS-0107-2026 V1<br>
   Información sujeta a cambio sin previo aviso · Aplica condiciones de crédito
 </footer>
 
@@ -480,19 +482,19 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 // v: { version: { l: precioLista, b: bonoDisponible } }
 // b > 0 significa que el cliente puede elegir aplicar ese bono al precio (o a tasa/enganche)
 const CAT = {
-  "Emgrand 2026":       {yr:2026, v:{"GC":{l:299990,b:35000},"GL":{l:347990,b:50000},"GF":{l:373990,b:60000}},        pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono disponible aplicable a precio, tasa o enganche. Seguro Gratis disponible (sujeto a condiciones)."},
-  "GX3 Pro 2025":       {yr:2025, v:{"GC":{l:329990,b:35000},"GF":{l:359990,b:35000}},                                pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono disponible aplicable a precio, tasa o enganche. Seguro Gratis disponible (sujeto a condiciones)."},
-  "GX3 Pro 2026":       {yr:2026, v:{"GC":{l:329990,b:35000},"GF":{l:359990,b:35000}},                                pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono disponible aplicable a precio, tasa o enganche. Seguro Gratis disponible (sujeto a condiciones)."},
-  "Coolray Lite 2026":  {yr:2026, v:{"GS MT":{l:339990,b:10000},"GS CVT":{l:359990,b:0}},                             pl:["BASE","CAMP","LAN"],       sg:false, el:false, promo:"0% Comisión por Apertura con plan LAN. GS MT: bono adicional disponible."},
-  "Nueva Coolray 2026": {yr:2026, v:{"GC Plus":{l:399990,b:0},"GL Plus":{l:419990,b:0},"GF Plus":{l:469990,b:0}},    pl:["BASE","CAMP"],             sg:false, el:false, promo:"0% Comisión por Apertura con plan CAMP. Tasa desde 10.99%."},
+  "Emgrand 2026":       {yr:2026, v:{"GC":{l:299990,b:25000},"GL":{l:347990,b:35000},"GF":{l:373990,b:50000}},        pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono julio (GC $25K · GL $35K · GF $50K) aplicable a precio, tasa o enganche. Alternativa: bono reducido + Seguro Gratis 12 meses. Requiere GFS/BBVA."},
+  "GX3 Pro 2025":       {yr:2025, v:{"GC":{l:329990,b:35000},"GF":{l:359990,b:35000}},                                pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono de $35,000 aplicable a precio, tasa o enganche. Alternativa: bono reducido $23,100 + Seguro Gratis 12 meses. Requiere GFS/BBVA."},
+  "GX3 Pro 2026":       {yr:2026, v:{"GC":{l:329990,b:35000},"GF":{l:359990,b:35000}},                                pl:["BASE","CAMP"],             sg:true,  el:false, promo:"Bono de $35,000 aplicable a precio, tasa o enganche. Alternativa: bono reducido $23,100 + Seguro Gratis 12 meses. Requiere GFS/BBVA."},
+  "Coolray Lite 2026":  {yr:2026, v:{"GS MT":{l:339990,b:10000},"GS CVT":{l:359990,b:0}},                             pl:["BASE","CAMP","LAN"],       sg:false, el:false, promo:"0% Comisión por Apertura con plan LAN o CAMP. GS MT: bono de $10,000 aplicable a precio, tasa o enganche."},
+  "Nueva Coolray 2026": {yr:2026, v:{"GC Plus":{l:399990,b:0},"GL Plus":{l:419990,b:0},"GF Plus":{l:469990,b:0}},    pl:["BASE","CAMP"],             sg:false, el:false, promo:"0% Comisión por Apertura con plan CAMP. Tasa desde 10.99% con plan BASE."},
   "Cityray 2025":       {yr:2025, v:{"GL":{l:488990,b:0},"GF":{l:518990,b:0},"GF Bitono":{l:528990,b:0}},            pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
   "Cityray 2026":       {yr:2026, v:{"GL":{l:488990,b:0},"GF":{l:518990,b:0},"GF Bitono":{l:528990,b:0}},            pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
-  "Starray 2025":       {yr:2025, v:{"GL 1.5":{l:559990,b:70000},"GL 2.0":{l:599990,b:70000},"GF 2.0":{l:655990,b:70000}}, pl:["BASE","CAMP","PROMO_S25"], sg:true, el:false, promo:"Bono de $70,000 aplicable a precio, tasa o enganche (requiere GFS/BBVA). Seguro Gratis disponible."},
-  "Starray 2026":       {yr:2026, v:{"GL 2.0":{l:599990,b:0},"GF 2.0":{l:655990,b:0}},                               pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99%. 0% Comisión por Apertura con plan CAMP."},
+  "Starray 2025":       {yr:2025, v:{"GL 1.5":{l:559990,b:70000},"GL 2.0":{l:599990,b:70000},"GF 2.0":{l:655990,b:70000}}, pl:["BASE","CAMP","PROMO_S25"], sg:true, el:false, promo:"Bono de $70,000 aplicable a precio, tasa o enganche (requiere GFS/BBVA). Alternativa: bono reducido $55,746 + Seguro Gratis 12 meses."},
+  "Starray 2026":       {yr:2026, v:{"GL 2.0":{l:599990,b:0},"GF 2.0":{l:655990,b:0}},                               pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
   "Geely EX2 2026":     {yr:2026, v:{"GL":{l:389900,b:0},"GF":{l:419900,b:0}},                                        pl:["BASE","CAMP","LAN","SOST"],sg:false, el:true,  promo:"Tasa desde 10.49% + 0% Comisión por Apertura con plan LAN. ⚡ Incluye Wallbox."},
-  "Geely EX5 EM-i 2026":{yr:2026, v:{"GL":{l:569990,b:40000},"GF":{l:599990,b:0}},                                   pl:["BASE","CAMP","SOST"],      sg:true,  el:true,  promo:"Versión GL: bono de $40,000 aplicable a precio, tasa o enganche. Tasa desde 10.49%. Seguro Gratis disponible. ⚡ Incluye Wallbox."},
-  "Geely EX5 2026":     {yr:2026, v:{"GF":{l:699990,b:0}},                                                            pl:["BASE","CAMP","SOST","PROMO_EX5"], sg:true, el:true, promo:"Tasa desde 6.00% (subsidio completo a tasa) o 7.71% + Seguro Gratis. 0% Comisión por Apertura. ⚡ Incluye Wallbox."},
-  "Monjaro 2026":       {yr:2026, v:{"GF":{l:699990,b:0}},                                                            pl:["BASE","CAMP","PROMO_MON"], sg:true,  el:false, promo:"Tasa desde 6.00% (subsidio completo a tasa) o 7.57% + Seguro Gratis. 0% Comisión por Apertura."},
+  "Geely EX5 EM-i 2026":{yr:2026, v:{"GL":{l:569990,b:40000},"GF":{l:599990,b:0}},                                   pl:["BASE","CAMP","SOST"],      sg:true,  el:true,  promo:"Versión GL: bono de $40,000 aplicable a precio, tasa o enganche. Alternativa: bono reducido $23,200 + Seguro Gratis. Tasa desde 10.49%. ⚡ Incluye Wallbox. Requiere GFS/BBVA."},
+  "Geely EX5 2026":     {yr:2026, v:{"GF":{l:699990,b:0}},                                                            pl:["BASE","CAMP","SOST","PROMO_EX5"], sg:true, el:true, promo:"Tasa desde 6.00% (subsidio completo a tasa) o tasa 7.96% + Seguro Gratis. 0% Comisión por Apertura con plan CAMP. ⚡ Incluye Wallbox."},
+  "Monjaro 2026":       {yr:2026, v:{"GF":{l:699990,b:0}},                                                            pl:["BASE","CAMP","PROMO_MON"], sg:true,  el:false, promo:"Tasa desde 6.47% (subsidio completo a tasa) o tasa 8.28% + Seguro Gratis. 0% Comisión por Apertura con plan CAMP."},
   "Okavango 2024":      {yr:2024, v:{"GL":{l:669888,b:0},"GF":{l:729888,b:0}},                                        pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
   "Okavango 2025":      {yr:2025, v:{"GL":{l:669888,b:0},"GF":{l:729888,b:0}},                                        pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."},
   "Okavango 2026":      {yr:2026, v:{"GF Suite":{l:729888,b:0}},                                                       pl:["BASE","CAMP"],             sg:false, el:false, promo:"Tasa desde 10.99% con plan BASE. 0% Comisión por Apertura con plan CAMP."}
@@ -506,9 +508,9 @@ const PLANS = {
   CAMP:      {name:"Plan CAMP",      desc:"0% Comisión por Apertura — sin costo inicial adicional",      cxa:()=>0,                      rate:()=>15.99},
   LAN:       {name:"Plan LAN",       desc:"Tasa preferencial + 0% Comisión por Apertura",               cxa:()=>0,                      rate:(p)=>p>=50?10.49:p>=30?12.49:15.49},
   SOST:      {name:"Plan SOSTENIBLE",desc:"Tasa preferencial para vehículos electrificados",            cxa:()=>0.025,                  rate:(p)=>p>=50?10.49:p>=30?12.49:14.99},
-  PROMO_EX5: {name:"Tasa Promo GFS", desc:"Tasa subsidiada 6.00% exclusiva con financiamiento GFS/BBVA. 0% CxA.", cxa:()=>0,          rate:()=>6.00},
-  PROMO_MON: {name:"Tasa Promo GFS", desc:"Tasa subsidiada 6.00% exclusiva con financiamiento GFS/BBVA. 0% CxA.", cxa:()=>0,          rate:()=>6.00},
-  PROMO_S25: {name:"Tasa Promo GFS", desc:"Tasa 8.99% con bono aplicado — exclusiva GFS/BBVA",          cxa:(yr)=>0.025,               rate:()=>8.99}
+  PROMO_EX5: {name:"Tasa Subsidiada GFS",  desc:"Tasa 6.00% subsidio completo a tasa · exclusiva GFS/BBVA · 0% CxA",   cxa:()=>0,       rate:()=>6.00},
+  PROMO_MON: {name:"Tasa Subsidiada GFS",  desc:"Tasa 6.47% subsidio completo a tasa · exclusiva GFS/BBVA · 0% CxA",   cxa:()=>0,       rate:()=>6.47},
+  PROMO_S25: {name:"Tasa Promo Starray",   desc:"Tasa 8.99% con bono aplicado a tasa · exclusiva GFS/BBVA",             cxa:(yr)=>0.025, rate:()=>8.99}
 };
 
 // ══════════════════════════════════════════════════════════
@@ -531,6 +533,25 @@ function pmt(principal, annualRate, months) {
   const r = annualRate / 100 / 12;
   if (r === 0) return principal / months;
   return principal * (r * Math.pow(1+r, months)) / (Math.pow(1+r, months) - 1);
+}
+
+// CAT = Costo Anual Total (BANXICO: tasa efectiva anual + 3% inflación)
+// netAmount = monto neto recibido por el cliente (precio - enganche, sin CxA)
+// monthlyPmt = pago mensual fijo (ya incluye el efecto del CxA financiado)
+function calcCAT(netAmount, monthlyPmt, months) {
+  if (!netAmount || monthlyPmt <= 0 || months <= 0) return null;
+  let r = 0.01;
+  for (let i = 0; i < 300; i++) {
+    const p1rn = Math.pow(1 + r, -months);
+    const f    = monthlyPmt * (1 - p1rn) / r - netAmount;
+    const df   = monthlyPmt * (months * r * Math.pow(1+r, -months-1) - (1 - p1rn)) / (r * r);
+    if (!isFinite(f) || !isFinite(df) || df === 0) break;
+    const step = f / df;
+    r -= step;
+    if (r <= 0) r = 1e-6;
+    if (Math.abs(step) < 1e-12) break;
+  }
+  return ((Math.pow(1 + r, 12) * 1.03) - 1) * 100;
 }
 
 function curRate() {
@@ -794,10 +815,12 @@ function buildQuote() {
   const pay   = pmt(total, rate, S.term);
   const today = new Date().toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'});
 
+  const cat    = calcCAT(monto, pay, S.term);
+
   document.getElementById('q-model').textContent = S.model + ' · ' + S.ver;
   document.getElementById('q-date').textContent  = 'Generada el ' + today;
   document.getElementById('q-pay').textContent   = fmt(pay);
-  document.getElementById('q-sub').textContent   = S.term + ' meses · Tasa ' + rate.toFixed(2) + '% anual';
+  document.getElementById('q-sub').textContent   = S.term + ' meses · Tasa fija ' + rate.toFixed(2) + '% anual';
 
   // Precio de lista siempre visible
   document.getElementById('qr-lista').textContent = fmt(S.lista);
@@ -826,8 +849,9 @@ function buildQuote() {
 
   document.getElementById('qr-total').textContent = fmt(total);
   document.getElementById('qr-plazo').textContent = S.term + ' meses';
-  document.getElementById('qr-tasa').textContent  = rate.toFixed(2) + '% anual';
+  document.getElementById('qr-tasa').textContent  = rate.toFixed(2) + '% anual (sin IVA)';
   document.getElementById('qr-plan').textContent  = p.name;
+  document.getElementById('qr-cat').textContent   = cat !== null ? cat.toFixed(2) + '% sin IVA' : '—';
 
   const qp = document.getElementById('q-promo');
   if (d.promo) { document.getElementById('q-promo-p').textContent = d.promo; qp.style.display='flex'; }
