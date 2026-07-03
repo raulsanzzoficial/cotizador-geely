@@ -725,7 +725,7 @@ function onEnganche() {
     S.eng    = (val / 100) * S.price;
     disp.textContent = val > 0 ? '= ' + fmt(S.eng) : '';
   }
-  if (S.plan) buildPlans();
+  if (S.model) buildPlans();
   liveCalc();
 }
 
